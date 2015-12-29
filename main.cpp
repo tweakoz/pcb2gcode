@@ -66,6 +66,14 @@ int main(int argc, char* argv[])
 
     po::variables_map& vm = options::get_vm();      //get the cli parameters
 
+    bool swapxy = false;
+    
+    if( vm.count("swapxy") )
+    {
+        swapxy = true;
+        printf( "Swapping XY axis\n");
+    }
+
     if (vm.count("version"))        //return version and quit
     {
         cout << PACKAGE_VERSION << endl;
@@ -92,6 +100,7 @@ int main(int argc, char* argv[])
 
     const string outputdir = vm["output-dir"].as<string>();
     shared_ptr<Isolator> isolator;
+
 
     if (vm.count("front") || vm.count("back"))
     {
@@ -426,7 +435,8 @@ int main(int argc, char* argv[])
         else
         {
             ep.export_ngc( build_filename(outputdir, vm["drill-output"].as<string>()),
-                           driller, vm["onedrill"].as<bool>(), vm["nog81"].as<bool>());
+                           driller, vm["onedrill"].as<bool>(), vm["nog81"].as<bool>(),
+                           swapxy );
         }
 
         cout << "DONE. The board should be drilled from the " << ( workSide(vm, "drill") ? "FRONT" : "BACK" ) << " side.\n";

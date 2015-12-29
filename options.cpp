@@ -166,6 +166,7 @@ options::options()
             "version", "show the current software version");
             
    cfg_options.add_options()(
+            "swapxy", po::value<bool>()->default_value(false)->implicit_value(true), "swap x and y coordinates")(
             "front", po::value<string>(),"front side RS274-X .gbr")(
             "back", po::value<string>(), "back side RS274-X .gbr")(
             "outline", po::value<string>(), "pcb outline polygon RS274-X .gbr")(

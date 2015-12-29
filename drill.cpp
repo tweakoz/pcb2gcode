@@ -182,7 +182,10 @@ double ExcellonProcessor::get_xvalue(double xvalue)
        2. Replace the current tiling implementation (gcode repetition) with a subroutine-based solution
  */
 /******************************************************************************/
-void ExcellonProcessor::export_ngc(const string of_name, shared_ptr<Driller> driller, bool onedrill, bool nog81)
+void ExcellonProcessor::export_ngc( const string of_name, shared_ptr<Driller> driller,
+                                    bool onedrill,
+                                    bool nog81,
+                                    bool swapxy )
 {
     ivalue_t double_mirror_axis = mirror_absolute ? 0 : board_width;
     double xoffsetTot;
@@ -300,10 +303,13 @@ void ExcellonProcessor::export_ngc(const string of_name, shared_ptr<Driller> dri
                     }
                     else
                     {
-                        of << "X"
-                           << ( get_xvalue(coord_iter->first) - xoffsetTot )
-                           * cfactor
-                           << " Y" << ( ( coord_iter->second - yoffsetTot ) * cfactor) << "\n";
+                        auto x = (get_xvalue(coord_iter->first) - xoffsetTot )*cfactor;
+                        auto y = (coord_iter->second - yoffsetTot )*cfactor;
+
+                        if( swapxy )
+                            of << "X" << y << " Y" << x << "\n";
+                        else
+                            of << "X" << x << " Y" << y << "\n";
                     }
                     //SVG EXPORTER
                     if (bDoSVG)
